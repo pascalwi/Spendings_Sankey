@@ -1,15 +1,32 @@
-#%%
+#%% IMPORTS
 import pandas as pd
 import plotly.graph_objects as go
 
 
+#%% READ DATA
+data_path = r"C:\Users\pasca\Documents\FastBudget\CSV_12_19__18_01_02.csv"
+data_path = r"G:\Meine Ablage\Backups\Fast budget\Fast Budget 01-24.csv"
+data = pd.read_csv(data_path, delimiter=";", 
+                   header=1, index_col="Id", 
+                   parse_dates=[5], 
+                   dayfirst=True, 
+                   keep_default_na=False,
+                   )
 
-
+#%% MAIN CATEGORIES
+categories = {  "Einkaufen": ["Lebensmittel", "Baumarkt", "Technik", "Verbrauchsartikel", "Geschenke", "Kleidung", "Essen arbeit", "Supplements", "Einkaufen"],
+                "Freizeit": ["Bar Alkohol", "Ausflug", "Kultur", "Aktivität", "Sport", "Restaurant", "PC", "Urlaub", "Software" ],
+                "Transport": ["Tanken", "OPVN", "Auto", "Reparatur", "Motorrad"],
+                "Wohnung": ["Wohnung", "Miete", "Strom", "Internet", "GEZ"],                
+                "Abos": ["Handyvertrag", "Netflix", "Spotify", "Lastpass", "Headspace", "Laufende Kosten"],
+                "Sonstiges": ["Sonstiges", "Ausgleich", "Friseur", "Ausgelegt"],               
+                "Sparen": ["Sparen", "Vanguard all world"], 
+                "Versicherung": ["Krankenversicherung", "Versicherung"],
+                "Archiv": ["Uni"]
+                }
 
 
 #%%
-data_path = r"C:\Users\pasca\Documents\FastBudget\CSV_12_19__18_01_02.csv"
-data = pd.read_csv(data_path, delimiter=";", header=1, index_col="Id", parse_dates=[5], dayfirst=True)
 year = 2022
 data = data[data["Fecha"] >= pd.Timestamp(year,1,1)]
 data = data[data["Fecha"] <= pd.Timestamp(year,12,31)]
@@ -32,12 +49,7 @@ spendings_categorized.loc["Sparen"] = earnings_categorized.sum()-spendings_categ
 # %%
 
 
-categories = {"Wohnung":["Rent", "Wohnung", "GEZ", "Internet", "Strom"],
-                "Auto": ["Car", "Fuel"],
-                "Abos": ["Handyvertrag", "Headspace", "Lastpass", "Netflix", "Spotify"],
-                "Einkaufen": ["Kleidung", "Essen", "Baumarkt", "Essen arbeit", "Fahrrad/Sport", "Technik", "Geschenke", "Sonstige einkäufe", "PC", "Verbrauchsartikel"],
-                "Sparen": ["Sparen", "Vanguard all world"], 
-                "Freizeit": ["Ausflug", "Bar Alkohol", "Restaurant", ]}
+
 
 flat_cats = [item for sublist in categories.values() for item in sublist]
 remaining = [item for item in spendings_categorized.index if item not in flat_cats]
